@@ -3,10 +3,11 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRouter from "./routes/user.routes.js";
 import authRouter from "./routes/auth.route.js";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 mongoose
-  .connect(process.env.MONGO)
+  .connect("mongodb+srv://deepalijaiswal:deepalijaiswal@deepali-estate.ltwdtwe.mongodb.net/?retryWrites=true&w=majority&appName=deepali-estate")
   .then(() => {
     console.log("connected  to mongodb");
   })
@@ -17,6 +18,7 @@ mongoose
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.listen(3000, () => {
   console.log("Server running on port 3000!");
