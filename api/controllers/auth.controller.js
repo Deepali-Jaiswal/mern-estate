@@ -39,12 +39,12 @@ export const signin = async (req, res, next) => {
   }
 };
 
-export const google = async (req, res, error) => {
+export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
 
     if (user) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const token = jwt.sign({ id: user._id }, "DEEPALI");
       const { password: pass, ...rest } = user._doc;
       res
         .cookie("access_token", token, { httpOnly: true })
@@ -64,7 +64,7 @@ export const google = async (req, res, error) => {
         avatar: req.body.photo,
       });
       await newUser.save();
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+      const token = jwt.sign({ id: newUser._id }, "DEEPALI");
       const { password: pass, ...rest } = newUser._doc;
       res
         .cookie("access_token", token, { httpOnly: true })
@@ -72,6 +72,15 @@ export const google = async (req, res, error) => {
         .json(rest);
     }
   } catch (error) {
-    next(error);
+    next(errorHandler(540, error.message));
+  }
+};
+
+export const signOut = (req, res, next) => {
+  try {
+    res.clearCookie("access-token");
+    res.status(200).json("User has been logged out!");
+  } catch (err) {
+    next(errorHandler(540,err.message));
   }
 };
